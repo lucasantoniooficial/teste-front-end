@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  node:
+    build:
+      args:
+        user: 1000
+        uid: 1001
+      context: .
+    working_dir: /app
+    volumes:
+      - ./:/app
+    networks:
+      - external_network_teste
+      - next-network
+
+  nginx:
+    image: nginx:alpine
+    tty: true
+    volumes:
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d/
+    ports:
+      - "3000:80"
+    networks:
+      - next-network
+
+volumes:
+  mysqldata:
+    driver: local
+networks:
+  external_network_teste:
+    external: true
+  next-network:
+    driver: bridge
